@@ -1,3 +1,4 @@
+Option Explicit
 Sub ChangeColorAndBackground()
     With Selection
         With .Font
