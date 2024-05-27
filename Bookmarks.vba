@@ -1,3 +1,4 @@
+Option Explicit
 Function GetBookmarkNames() As Collection
     Set GetBookmarkNames = New Collection
     If ActiveDocument.Bookmarks.Count > 0 Then
