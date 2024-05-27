@@ -1,4 +1,5 @@
-Private Function TextFromCell(tableId As Integer, row As Integer, column As Integer) As String
+Option Explicit
+Function TextFromCell(tableId As Integer, row As Integer, column As Integer) As String
     Dim cell As Range
     Dim cellEndChars As String
     cellEndChars = Chr(7) & Chr(13)
