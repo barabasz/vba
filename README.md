@@ -7,6 +7,7 @@ More or less useful scripts in VBA (playground)
   - `WriteTextToBookmark`
   - `ClearBookmark` clears bookmark content but left bookmark intact
   - `ClearAllBookmarks`
+  - `PoprawDaty` normalize the date format to the ISO 8601:2004 standard
   - `RemoveBookmark` removes bookmark but left content intact
   - `RemoveAllBookmarks`
   - `RemoveBookmarkWithContent`
