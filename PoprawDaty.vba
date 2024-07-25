@@ -1,6 +1,10 @@
 Option Explicit
+'
+' Normalize the date format in the selected column to the ISO 8601:2004 standard
+' dd-mm-yyyy / dd.mm.yyyy / yyyy.mm.dd --> yyyy-mm-dd
+'
 Function PoprawDatyZlyFormat(data As String, adres As String)
-    Debug.Print "Nieobsługiwany format (" & adres & "): " & data
+    Debug.Print "Nieobsługiwany format (" & adres & "): " & Trim(data)
 End Function
 Function PoprawDatyInfo(i As Integer, n As Integer, p As Integer, z As Integer)
     Dim msg As String
@@ -8,25 +12,46 @@ Function PoprawDatyInfo(i As Integer, n As Integer, p As Integer, z As Integer)
     Debug.Print msg
     MsgBox msg
 End Function
+Function PoprawDatySprawdz(d As String, m As String, r As String) As Boolean
+    If IsNumeric(d) And IsNumeric(m) And IsNumeric(r) Then
+        PoprawDatySprawdz = True
+    Else
+        PoprawDatySprawdz = False
+    End If
+End Function
 Function PoprawDatyZmienDate(data As String, adres As String) As String
-   data = Trim(data)
+    Dim d As String, m As String, r As String
+    data = Trim(data)
     If Len(data) = 10 Then
         If Mid(data, 5, 1) = "-" And Mid(data, 8, 1) = "-" Then
             PoprawDatyZmienDate = data
         Else
-            If Mid(data, 3, 1) = "-" And Mid(data, 6, 1) = "-" Then
-                PoprawDatyZmienDate = Right(data, 4) & "-" & Mid(data, 4, 2) & "-" & Left(data, 2)
-            ElseIf Mid(data, 3, 1) = "." And Mid(data, 6, 1) = "." Then
-                PoprawDatyZmienDate = Right(data, 4) & "-" & Mid(data, 4, 2) & "-" & Left(data, 2)
+            ' dd-mm-yyyy OR dd.mm.yyyy
+            If (Mid(data, 3, 1) = "-" And Mid(data, 6, 1) = "-") Or _
+               (Mid(data, 3, 1) = "." And Mid(data, 6, 1) = ".") Then
+                d = Left(data, 2)
+                m = Mid(data, 4, 2)
+                r = Right(data, 4)
+            ' yyyy.mm.dd
             ElseIf Mid(data, 5, 1) = "." And Mid(data, 8, 1) = "." Then
-                PoprawDatyZmienDate = Left(data, 4) & "-" & Mid(data, 6, 2) & "-" & Right(data, 2)
+                d = Right(data, 2)
+                m = Mid(data, 6, 2)
+                r = Left(data, 4)
             Else
-                Debug.Print PoprawDatyZlyFormat(data, adres)
+                PoprawDatyZlyFormat data, adres
                 PoprawDatyZmienDate = data
+                Exit Function
+            End If
+            If PoprawDatySprawdz(d, m, r) Then
+                PoprawDatyZmienDate = r & "-" & m & "-" & d
+            Else
+                PoprawDatyZlyFormat data, adres
+                PoprawDatyZmienDate = data
+                Exit Function
             End If
         End If
     Else
-        Debug.Print PoprawDatyZlyFormat(data, adres)
+        PoprawDatyZlyFormat data, adres
         PoprawDatyZmienDate = data
     End If
 End Function
@@ -66,4 +91,3 @@ Sub PoprawDaty()
     End If
     PoprawDatyInfo i, n, p, z
 End Sub
-
